@@ -1,0 +1,48 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class GuitarLessons {
+    public static void main(String[] args) throws IOException {
+        var reader = new BufferedReader(new InputStreamReader(System.in));
+        
+        var line1 = reader.readLine();
+        if (line1 == null) return;
+        var st1 = new StringTokenizer(line1);
+        var N = Integer.parseInt(st1.nextToken());
+        var M = Integer.parseInt(st1.nextToken());
+
+        var lectures = new int[N];
+        var left = 0;
+        var right = 0;
+        
+        var st2 = new StringTokenizer(reader.readLine());
+        for (var i = 0; i < N; i++) {
+            lectures[i] = Integer.parseInt(st2.nextToken());
+            if (lectures[i] > left) left = lectures[i];
+            right += lectures[i];
+        }
+
+        while (left <= right) {
+            var middle = (left + right) / 2;
+            var count = 1;
+            var currentSum = 0;
+
+            for (var i = 0; i < N; i++) {
+                if (currentSum + lectures[i] > middle) {
+                    count++;
+                    currentSum = 0;
+                }
+                currentSum += lectures[i];
+            }
+
+            if (count <= M) {
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+        System.out.println(left);
+    }
+}
