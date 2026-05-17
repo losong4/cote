@@ -1,0 +1,68 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class ShortestPath {
+    public static void main(String[] args) throws IOException {
+        var reader = new BufferedReader(new InputStreamReader(System.in));
+        var st = new StringTokenizer(reader.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[][] map = new int[n][m];
+        int[][] dist = new int[n][m];
+        Queue<int[]> queue = new ArrayDeque<>();
+
+        int startR = -1, startC = -1;
+
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(reader.readLine());
+            for (int j = 0; j < m; j++) {
+                map[i][j] = Integer.parseInt(st.nextToken());
+                if (map[i][j] == 2) {
+                    startR = i;
+                    startC = j;
+                    dist[i][j] = 0;
+                } else if (map[i][j] == 0) {
+                    dist[i][j] = 0;
+                } else {
+                    dist[i][j] = -1;
+                }
+            }
+        }
+
+        queue.add(new int[]{startR, startC});
+        final int[][] MV = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+        while (!queue.isEmpty()) {
+            int[] curr = queue.poll();
+            int r = curr[0];
+            int c = curr[1];
+
+            for (int[] dir : MV) {
+                int nr = r + dir[0];
+                int nc = c + dir[1];
+
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m) {
+                    if (map[nr][nc] == 1 && dist[nr][nc] == -1) {
+                        dist[nr][nc] = dist[r][c] + 1;
+                        queue.add(new int[]{nr, nc});
+                    }
+                }
+            }
+        }
+
+        var sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                sb.append(dist[i][j]).append(" ");
+            }
+            sb.append("\n");
+        }
+        System.out.print(sb);
+    }
+}
